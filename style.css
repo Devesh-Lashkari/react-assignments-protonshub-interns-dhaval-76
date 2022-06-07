@@ -1,0 +1,29 @@
+body {
+  margin: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+label{
+  margin: 5px 0;
+}
+
+input {
+  margin-left: 15px;
+}
+
+.none {
+  display: none;
+}
+
+table {
+  margin: 50px 0;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
