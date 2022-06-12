@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Home from "./screens/Home";
-import PokemonDetail from "./screens/PokemonDetail";
+import AsteroidDetailScreen from "./screens/AsteroidDetailScreen";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <>
           <Route path="/" element={<Home />} />
-          <Route path="/pokemon/:id" element={<PokemonDetail />} />
+          <Route path="/asteroid/:id" element={<AsteroidDetailScreen />} />
         </>
       </Routes>
     </div>

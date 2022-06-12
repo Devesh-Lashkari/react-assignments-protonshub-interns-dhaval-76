@@ -4,15 +4,20 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useStateValue } from "../StateProvider";
 
 function Home() {
-  const [pokemonInput, setPokemonInput] = useState("");
+  // const [state, dispatch] = useStateValue();
+
+  // console.log({ state });
+
+  const [asteroidId, setAsteroidId] = useState("");
 
   const navigate = useNavigate();
 
   const onSubmitPress = () => {
-    if (typeof pokemonInput === "string" && pokemonInput !== "") {
-      navigate(`/pokemon/${pokemonInput.toLowerCase()}`);
+    if (typeof asteroidId === "string" && asteroidId !== "") {
+      navigate(`/pokemon/${asteroidId.toLowerCase()}`);
     } else {
       toast.error("Input can't be empty", {
         position: toast.POSITION.TOP_CENTER,
@@ -34,17 +39,25 @@ function Home() {
       >
         <div>
           <TextField
-            label="Enter pokemon name"
+            label="Enter Asteroid ID"
             variant="outlined"
-            value={pokemonInput}
-            onChange={(e) => setPokemonInput(e.target.value)}
+            value={asteroidId}
+            onChange={(e) => setAsteroidId(e.target.value)}
           />
+          <Button
+            disabled={!asteroidId}
+            style={{ marginTop: "10px" }}
+            onClick={onSubmitPress}
+            variant="outlined"
+          >
+            Submit
+          </Button>
           <Button
             style={{ marginTop: "10px" }}
             onClick={onSubmitPress}
             variant="outlined"
           >
-            Fetch Pokemon
+            Random Asteroid
           </Button>
         </div>
       </Box>
