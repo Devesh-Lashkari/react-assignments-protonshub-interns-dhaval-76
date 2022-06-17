@@ -2,116 +2,75 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { useDispatch } from "react-redux";
 
-import { useStateValue } from "../StateProvider";
-import { actionTypes } from "../reducer";
-
-const API_KEY = "qEpXYZz0eAF9zS5a9rjZXgGZPGsrxlRC8Znuv36s";
+import ButtonAppBar from "../components/AppBar";
+import { actionTypes } from "../store/parkingReducer";
 
 function Home() {
-  const [state, dispatch] = useStateValue();
+  const [parkingSpace, setParkingSpace] = useState("");
 
-  const [asteroidId, setAsteroidId] = useState("");
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
-  const onSubmitPress = async () => {
-    try {
-      if (typeof asteroidId === "string" && asteroidId !== "") {
-        const res = await axios.get(
-          `https://api.nasa.gov/neo/rest/v1/neo/${asteroidId}?api_key=${API_KEY}`
-        );
+  const onSubmitPress = (e) => {
+    const temp = parseInt(parkingSpace);
+    if (temp > 0) {
+      dispatch({
+        type: actionTypes.DEFINED_PARKING_SPACE,
+        payload: temp,
+      });
 
-        dispatch({
-          type: actionTypes.SET_ASTERIOD_DATA,
-          payload: res.data,
-        });
-
-        navigate(`/asteroid/${asteroidId.toLowerCase()}`);
-      } else {
-        toast.error("Input can't be empty", {
-          position: toast.POSITION.TOP_CENTER,
-          toastId: "homeSubmitError",
-        });
-      }
-    } catch (err) {
-      toast.error(err.message, {
+      navigate("/parking");
+    } else {
+      e.preventDefault();
+      toast.error("Parking Space must be greater than zero!", {
         position: toast.POSITION.TOP_CENTER,
         toastId: "homeSubmitError",
       });
     }
   };
 
-  const onRandomBtnPress = async () => {
-    try {
-      const randomRes = await axios.get(
-        "https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=DEMO_KEY"
-      );
-
-      const randomResData = randomRes.data.near_earth_objects;
-
-      const randomNumber = Math.floor(Math.random() * randomResData.length);
-      const randomAsteroidId = randomResData[randomNumber].id;
-
-      const res = await axios.get(
-        `https://api.nasa.gov/neo/rest/v1/neo/${randomAsteroidId}?api_key=${API_KEY}`
-      );
-
-      dispatch({
-        type: actionTypes.SET_ASTERIOD_DATA,
-        payload: res.data,
-      });
-
-      navigate(`/asteroid/${randomAsteroidId}`);
-    } catch (err) {
-      toast.error(err.message, {
-        position: toast.POSITION.TOP_CENTER,
-        toastId: "homeRandomSubmitError",
-      });
-    }
-  };
-
   return (
-    <div className="flex flex-col items-center min-h-screen pt-3">
-      <Box
-        component="form"
-        sx={{
-          "& > :not(style)": { m: 1, width: "25ch" },
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={onSubmitPress}
-      >
-        <div className="min-w-[300px]">
+    <div>
+      <ButtonAppBar />
+
+      <div className="m-9 p-5 rounded-xl border-black border-2">
+        <Box
+          component="form"
+          sx={{
+            "& > :not(style)": { m: 1, width: "25ch" },
+          }}
+          noValidate
+          autoComplete="off"
+          onSubmit={onSubmitPress}
+        >
+          <Typography variant="h6" className="font-bold">
+            Enter your required space
+          </Typography>
           <TextField
             className="min-w-full"
-            label="Enter Asteroid ID"
+            label="Enter Parking Space"
             variant="outlined"
-            value={asteroidId}
-            onChange={(e) => setAsteroidId(e.target.value)}
+            type="number"
+            value={parkingSpace}
+            onChange={(e) => setParkingSpace(e.target.value)}
           />
-          <div className="flex mt-3 gap-3 justify-between">
+          <div className="flex min-w-full justify-end">
             <Button
-              className="min-w-max"
-              disabled={!asteroidId}
+              disabled={!parkingSpace}
               onClick={onSubmitPress}
-              variant="outlined"
+              variant="contained"
             >
               Submit
             </Button>
-            <Button
-              className="min-w-max"
-              onClick={onRandomBtnPress}
-              variant="contained"
-            >
-              Random Asteroid
-            </Button>
           </div>
-        </div>
-      </Box>
+        </Box>
+      </div>
     </div>
   );
 }

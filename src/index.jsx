@@ -3,23 +3,22 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Provider } from "react-redux";
 
 import "./index.css";
 import App from "./App";
 
-import { StateProvider } from "./StateProvider";
-import reducer, { initialState } from "./reducer";
+import store from "./store";
 
 toast.configure();
 
 ReactDOM.render(
   <React.StrictMode>
-    <StateProvider initialState={initialState} reducer={reducer}>
+    <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </StateProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
-
